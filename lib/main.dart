@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart'; // Pacchetto per selezione file
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart'; // Pacchetto per selezione file
 
 void main() {
   runApp(MyDocumentsApp());
@@ -429,7 +430,7 @@ class _FolderCardState extends State<FolderCard> {
         children: [
           // Contenuto principale della card (cartella)
           Container(
-            width: 160,
+            width: 320,
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
@@ -437,7 +438,7 @@ class _FolderCardState extends State<FolderCard> {
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withOpacity(0.3),
                   blurRadius: _isHovered ? 8 : 4,
                   offset: _isHovered ? const Offset(0, 4) : const Offset(0, 2),
                 ),
@@ -551,126 +552,428 @@ class _FileCardState extends State<FileCard> {
   bool _isSelected = false;
 
   /// Metodo per mostrare il dialog con i dettagli
-  void _showFileDetailsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Sezione Firme video biometriche
-                const Text(
-                  'Firme video biometriche',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey.shade200,
-                  child: const Text(
-                    'Ancora nessuna firma applicata',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                const SizedBox(height: 16),
+  void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4), // Angoli arrotondati a 4
+        ),
+        child: Stack(
+          children: [
+            // Contenitore principale
+            Container(
+              color: Colors.white, // Sfondo bianco
+              padding: const EdgeInsets.all(16), // Margine interno uniforme
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Colonna sinistra
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Firme video biometriche
+                        const Text(
+                          'Firme video biometriche',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'Ancora nessuna firma applicata',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {}, // Placeholder per azione "Firma"
+                              child: const Text('Firma'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-                // Sezione Firme grafiche
-                const Text(
-                  'Firme grafiche',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.grey.shade200,
-                  child: const Text(
-                    'Ancora nessuna firma applicata',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                const SizedBox(height: 16),
+                        // Firme grafiche
+                        const Text(
+                          'Firme grafiche',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'Ancora nessuna firma applicata',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {}, // Placeholder per azione "Firma"
+                              child: const Text('Firma'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-                // Sezione Registro attività
-                const Text(
-                  'Registro attività',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('0 Visualizzazioni'),
-                    Text('0 Download'),
-                    Text('0 Firme'),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                        // Registro attività
+                        const Text(
+                          'Registro attività',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            // Visualizzazioni
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Visualizzazioni',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
 
-                // Sezione Dettagli
-                const Text(
-                  'Dettagli',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text('Hash (SHA256): 640a6...acd5d'),
-                const Text('Caricato da: esempio@dominio.com'),
-                const Text('Caricato il: 4 Feb 2025, 05:27'),
-                const SizedBox(height: 16),
+                            // Download
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Download',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
 
-                // Sezione Validazioni
-                const Text(
-                  'Validazioni',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                            // Firme
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Firme',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                const Text('Solana: 4 Feb 2025, 05:28'),
-                const Text('Ton: 4 Feb 2025, 07:00'),
-                const SizedBox(height: 16),
 
-                // Sezione Certificato
-                const Text(
-                  'Certificato',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                  const SizedBox(width: 16), // Spaziatura tra colonne
+
+                  // Colonna destra
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Dettagli
+                        const Text(
+                          'Dettagli',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Hash (SHA256):',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  '640a6...acd5d',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  icon: const Icon(Icons.copy,
+                                      color: Colors.grey, size: 20),
+                                  onPressed: () {
+                                    Clipboard.setData(const ClipboardData(
+                                        text: "640a6...acd5d"));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Hash copiato negli appunti'),
+                                      ),
+                                    );
+                                  },
+                                  tooltip: 'Copia',
+                                  splashRadius: 20,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Caricato da:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              'simone.sansalone@cyberneid.com (io)',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Caricato il:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              '4 Feb 2025, 05:27',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Validazioni
+                        const Text(
+                          'Validazioni',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildValidationCard('Solana', '4 Feb 2025, 05:28'),
+                        const SizedBox(height: 8),
+                        _buildValidationCard('Ton', '4 Feb 2025, 07:00'),
+                        const SizedBox(height: 16),
+
+                        // Certificato
+                        const Text(
+                          'Certificato',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Certificato di autenticità',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {}, // Placeholder per download
+                              icon: const Icon(Icons.download,
+                                  color: Colors.blue),
+                              label: const Text(
+                                'Scarica',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  onPressed: () {}, // Placeholder per azione di download
-                  icon: const Icon(Icons.download),
-                  label: const Text('Scarica'),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
-  }
+
+            // Pulsante di chiusura in alto a destra
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+/// Helper per creare una scheda di validazione
+Widget _buildValidationCard(String name, String date) {
+  return Container(
+    height: 40,
+    padding: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade100,
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.check_circle, color: Colors.green),
+        const SizedBox(width: 8),
+        Text(
+          name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        Text(date),
+      ],
+    ),
+  );
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -690,7 +993,7 @@ class _FileCardState extends State<FileCard> {
                 borderRadius: BorderRadius.circular(4),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.3),
                     blurRadius: _isHovered ? 8 : 4,
                     offset: _isHovered ? const Offset(0, 4) : const Offset(0, 2),
                   ),
@@ -854,124 +1157,423 @@ class _FileCardState extends State<FileCard> {
   }
 }
 
-
 void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(4), // Angoli arrotondati a 4
         ),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          color: Colors.white,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Sezione firme video biometriche
-              const Text(
-                'Firme video biometriche',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(8),
-                color: Colors.grey.shade200,
-                child: const Text(
-                  'Ancora nessuna firma applicata',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-              const SizedBox(height: 16),
+        child: Stack(
+          children: [
+            // Contenitore principale
+            Container(
+              color: Colors.white, // Sfondo bianco
+              padding: const EdgeInsets.all(64), // Margine interno uniforme
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Colonna sinistra
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Firme video biometriche
+                        const Text(
+                          'Firme video biometriche',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'Ancora nessuna firma applicata',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {}, // Placeholder per azione "Firma"
+                              child: const Text('Firma'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-              // Sezione firme grafiche
-              const Text(
-                'Firme grafiche',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(8),
-                color: Colors.grey.shade200,
-                child: const Text(
-                  'Ancora nessuna firma applicata',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-              const SizedBox(height: 16),
+                        // Firme grafiche
+                        const Text(
+                          'Firme grafiche',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 40,
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'Ancora nessuna firma applicata',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {}, // Placeholder per azione "Firma"
+                              child: const Text('Firma'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-              // Sezione registro attività
-              const Text(
-                'Registro attività',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('0 Visualizzazioni'),
-                  Text('0 Download'),
-                  Text('0 Firme'),
+                        // Registro attività
+                        const Text(
+                          'Registro attività',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            // Visualizzazioni
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Visualizzazioni',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Download
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Download',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Firme
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Column(
+                                  children: [
+                                    Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Firme',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 16), // Spaziatura tra colonne
+
+                  // Colonna destra
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Dettagli
+                        const Text(
+                          'Dettagli',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Hash (SHA256):',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  '640a6...acd5d',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  icon: const Icon(Icons.copy,
+                                      color: Colors.grey, size: 20),
+                                  onPressed: () {
+                                    Clipboard.setData(const ClipboardData(
+                                        text: "640a6...acd5d"));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Hash copiato negli appunti'),
+                                      ),
+                                    );
+                                  },
+                                  tooltip: 'Copia',
+                                  splashRadius: 20,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Caricato da:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              'simone.sansalone@cyberneid.com (io)',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Caricato il:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Text(
+                              '4 Feb 2025, 05:27',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Validazioni
+                        const Text(
+                          'Validazioni',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildValidationCard('Solana', '4 Feb 2025, 05:28'),
+                        const SizedBox(height: 8),
+                        _buildValidationCard('Ton', '4 Feb 2025, 07:00'),
+                        const SizedBox(height: 16),
+
+                        // Certificato
+                        const Text(
+                          'Certificato',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Certificato di autenticità',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {}, // Placeholder per download
+                              icon: const Icon(Icons.download,
+                                  color: Colors.blue),
+                              label: const Text(
+                                'Scarica',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
+            ),
 
-              // Sezione Dettagli
-              const Text(
-                'Dettagli',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+            // Pulsante di chiusura in alto a destra
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.black),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
-              const SizedBox(height: 8),
-              const Text('Hash (SHA256): 640a6...acd5d'),
-              const Text('Caricato da: esempio@dominio.com'),
-              const Text('Caricato il: 4 Feb 2025, 05:27'),
-              const SizedBox(height: 16),
-
-              // Sezione Validazioni
-              const Text(
-                'Validazioni',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text('Solana: 4 Feb 2025, 05:28'),
-              const Text('Ton: 4 Feb 2025, 07:00'),
-              const SizedBox(height: 16),
-
-              // Sezione Certificato
-              const Text(
-                'Certificato',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextButton.icon(
-                onPressed: () {}, // Placeholder per azione di download
-                icon: const Icon(Icons.download),
-                label: const Text('Scarica'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     },
+  );
+}
+
+/// Helper per creare una scheda di validazione
+Widget _buildValidationCard(String name, String date) {
+  return Container(
+    height: 40,
+    padding: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade100,
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.check_circle, color: Colors.green),
+        const SizedBox(width: 8),
+        Text(
+          name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        Text(date),
+      ],
+    ),
   );
 }
