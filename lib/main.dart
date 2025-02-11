@@ -1229,7 +1229,8 @@ void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
           } else if (snapshot.hasData) {
             // Recupera il document_hash dal risultato della query
             final data = snapshot.data!;
-            final String documentHash = data["document_hash"] ?? "Nessun hash disponibile";
+            final String documentHash = data["document_hash"] ?? "Nessuna informazione disponibile";
+            final String uploadDate = data["upload_date"] ?? "Nessuna informazione disponibile";
 
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -1522,7 +1523,7 @@ void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Text(
                                     'Caricato il:',
                                     style: TextStyle(
@@ -1531,7 +1532,7 @@ void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
                                     ),
                                   ),
                                   Text(
-                                    '4 Feb 2025, 05:27',
+                                    uploadDate,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500,
@@ -1549,9 +1550,9 @@ void _showFileDetailsDialog(BuildContext context, Map<String, dynamic> file) {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              _buildValidationCard('Solana', '4 Feb 2025, 05:28'),
-                              const SizedBox(height: 8),
-                              _buildValidationCard('Ton', '4 Feb 2025, 07:00'),
+                              _buildValidationCard('Algo', '11 Feb 2025'),
+                              //const SizedBox(height: 8),
+                              //_buildValidationCard('Ton', '4 Feb 2025, 07:00'),
                               const SizedBox(height: 16),
                               const Text(
                                 'Certificato',
