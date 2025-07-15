@@ -18,7 +18,7 @@ class NotarizationApi {
   /// final api = NotarizationApi(baseUrl: 'https://api.mioserver.com');
   /// ```
   final String baseUrl;
-  const NotarizationApi({this.baseUrl = 'http://127.0.0.1:8077'});
+  const NotarizationApi({this.baseUrl = 'http://127.0.0.1:8077/notarization-api'});
 
   // ========================================================================
   //  SCENARIO 1  –  Upload e notarizzazione gestita dal wallet aziendale
