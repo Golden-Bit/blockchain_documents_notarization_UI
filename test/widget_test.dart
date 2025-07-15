@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:blockchain_docuemnts_notarization/main.dart';
+import 'package:blockchain_docuemnts_notarization/home_content.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
